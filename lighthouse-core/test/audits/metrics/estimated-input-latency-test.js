@@ -6,19 +6,16 @@
 'use strict';
 
 const Audit = require('../../../audits/metrics/estimated-input-latency.js');
-const Runner = require('../../../runner');
 const assert = require('assert');
 const options = Audit.defaultOptions;
 
 const pwaTrace = require('../../fixtures/traces/progressive-app-m60.json');
 
-const computedArtifacts = Runner.instantiateComputedArtifacts();
-
 function generateArtifactsWithTrace(trace) {
-  return Object.assign({
+  return {
     traces: {[Audit.DEFAULT_PASS]: trace},
     devtoolsLogs: {[Audit.DEFAULT_PASS]: []},
-  }, computedArtifacts);
+  };
 }
 /* eslint-env jest */
 

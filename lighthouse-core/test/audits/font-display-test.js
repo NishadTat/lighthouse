@@ -8,7 +8,6 @@
 const NetworkRequest = require('../../lib/network-request');
 const Audit = require('../../audits/font-display.js');
 const assert = require('assert');
-const Runner = require('../../runner.js');
 const networkRecordsToDevtoolsLog = require('../network-records-to-devtools-log.js');
 
 /* eslint-env jest */
@@ -36,10 +35,10 @@ const openSansFontBold = {
 
 describe('Performance: Font Display audit', () => {
   function getArtifacts(networkRecords, fonts) {
-    return Object.assign({
+    return {
       devtoolsLogs: {[Audit.DEFAULT_PASS]: networkRecordsToDevtoolsLog(networkRecords)},
       Fonts: fonts,
-    }, Runner.instantiateComputedArtifacts());
+    };
   }
 
   it('fails when not all fonts have a correct font-display rule', () => {
@@ -59,7 +58,7 @@ describe('Performance: Font Display audit', () => {
         endTime: 3, startTime: 1,
         resourceType: NetworkRequest.TYPES.Font,
       },
-    ], webFonts)).then(result => {
+    ], webFonts), {computedCache: new Map()}).then(result => {
       const items = [{
         url: openSansFontBold.src[0],
         wastedMs: 2000,
@@ -86,7 +85,7 @@ describe('Performance: Font Display audit', () => {
         endTime: 3, startTime: 1,
         resourceType: NetworkRequest.TYPES.Font,
       },
-    ], webFonts)).then(result => {
+    ], webFonts), {computedCache: new Map()}).then(result => {
       assert.strictEqual(result.rawValue, true);
     });
   });

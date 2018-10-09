@@ -5,7 +5,7 @@
  */
 'use strict';
 
-const Audit = require('../../audits/metrics.js');
+const MetricsAudit = require('../../audits/metrics.js');
 
 const pwaTrace = require('../fixtures/traces/progressive-app-m60.json');
 const pwaDevtoolsLog = require('../fixtures/traces/progressive-app-m60.devtools.log.json');
@@ -16,15 +16,15 @@ describe('Performance: metrics', () => {
   it('evaluates valid input correctly', async () => {
     const artifacts = {
       traces: {
-        [Audit.DEFAULT_PASS]: pwaTrace,
+        [MetricsAudit.DEFAULT_PASS]: pwaTrace,
       },
       devtoolsLogs: {
-        [Audit.DEFAULT_PASS]: pwaDevtoolsLog,
+        [MetricsAudit.DEFAULT_PASS]: pwaDevtoolsLog,
       },
     };
 
-    const settings = {throttlingMethod: 'simulate'};
-    const result = await Audit.audit(artifacts, {settings});
+    const context = {settings: {throttlingMethod: 'simulate'}, computedCache: new Map()};
+    const result = await MetricsAudit.audit(artifacts, context);
     expect(result.details.items[0]).toMatchSnapshot();
   });
 });

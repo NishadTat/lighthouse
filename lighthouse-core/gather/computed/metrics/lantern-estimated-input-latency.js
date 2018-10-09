@@ -8,7 +8,6 @@
 const makeComputedArtifact = require('../new-computed-artifact.js');
 const LanternMetric = require('./lantern-metric');
 const BaseNode = require('../../../lib/dependency-graph/base-node');
-const EstimatedInputLatency = require('./estimated-input-latency');
 const LanternFirstMeaningfulPaint = require('./lantern-first-meaningful-paint.js');
 
 /** @typedef {BaseNode.Node} Node */
@@ -57,6 +56,9 @@ class LanternEstimatedInputLatency extends LanternMetric {
       simulation.nodeTimings,
       fmpTimeInMs
     );
+
+    // Require here to resolve circular dependency.
+    const EstimatedInputLatency = require('./estimated-input-latency');
 
     return {
       timeInMs: EstimatedInputLatency.calculateRollingWindowEIL(events),

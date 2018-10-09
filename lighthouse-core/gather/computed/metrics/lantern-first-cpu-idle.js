@@ -7,7 +7,6 @@
 
 const makeComputedArtifact = require('../new-computed-artifact.js');
 const BaseNode = require('../../../lib/dependency-graph/base-node');
-const FirstCPUIdle = require('./first-cpu-idle');
 const LanternInteractive = require('./lantern-interactive');
 
 class LanternFirstCPUIdle extends LanternInteractive {
@@ -53,6 +52,8 @@ class LanternFirstCPUIdle extends LanternInteractive {
       longTasks.push({start: timing.startTime, end: timing.endTime});
     }
 
+    // Require here to resolve circular dependency.
+    const FirstCPUIdle = require('./first-cpu-idle');
     return FirstCPUIdle.findQuietWindow(fmpTimeInMs, Infinity, longTasks);
   }
 

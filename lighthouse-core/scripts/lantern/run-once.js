@@ -20,8 +20,9 @@ async function run() {
   const devtoolsLogs = {defaultPass: require(process.argv[3])};
   const artifacts = {traces, devtoolsLogs};
 
+  const context = {computedCache: new Map()};
   // @ts-ignore - We don't need the full artifacts
-  const result = await PredictivePerf.audit(artifacts);
+  const result = await PredictivePerf.audit(artifacts, context);
   process.stdout.write(JSON.stringify(result.details.items[0], null, 2));
 
   // Dump the TTI graph with simulated timings to a trace if LANTERN_DEBUG is enabled

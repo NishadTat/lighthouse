@@ -9,6 +9,7 @@ const Audit = require('./audit');
 const NetworkRequest = require('../lib/network-request');
 const allowedFontFaceDisplays = ['block', 'fallback', 'optional', 'swap'];
 const i18n = require('../lib/i18n/i18n.js');
+const NetworkRecords = require('../gather/computed/network-records.js');
 
 const UIStrings = {
   /** Title of a diagnostic audit that provides detail on if all the text on a webpage was visible while the page was loading its webfonts. This descriptive title is shown to users when the amount is acceptable and no user action is required. */
@@ -39,9 +40,10 @@ class FontDisplay extends Audit {
 
   /**
    * @param {LH.Artifacts} artifacts
+   * @param {LH.Audit.Context} context
    * @return {Promise<LH.Audit.Product>}
    */
-  static audit(artifacts) {
+  static audit(artifacts, context) {
     const devtoolsLogs = artifacts.devtoolsLogs[this.DEFAULT_PASS];
     const fontFaces = artifacts.Fonts;
 
@@ -50,7 +52,7 @@ class FontDisplay extends Audit {
       !fontFace.display || !allowedFontFaceDisplays.includes(fontFace.display)
     );
 
-    return artifacts.requestNetworkRecords(devtoolsLogs).then((networkRecords) => {
+    return NetworkRecords.request(devtoolsLogs, context).then((networkRecords) => {
       const results = networkRecords.filter(record => {
         const isFont = record.resourceType === NetworkRequest.TYPES.Font;
 
